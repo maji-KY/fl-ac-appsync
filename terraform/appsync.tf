@@ -80,4 +80,9 @@ resource "aws_appsync_resolver" "bid_resolver" {
   data_source = aws_appsync_datasource.bid_data.name
 }
 
-
+resource "aws_appsync_resolver" "on_update_auction_resolver" {
+  api_id      = aws_appsync_graphql_api.app.id
+  type        = "Subscription"
+  field       = "onUpdateAuction"
+  data_source = aws_appsync_datasource.auction_data.name
+}

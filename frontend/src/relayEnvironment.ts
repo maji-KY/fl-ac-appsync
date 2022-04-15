@@ -5,7 +5,7 @@ import { SubscriptionClient } from "./subscriptionClient";
 function fetchQuery(operation, variables) {
   const token = auth.token;
   if (token) {
-    return fetch("https://jjnbeyhnmbfcjhofuptsskbseq.appsync-api.ap-northeast-1.amazonaws.com/graphql", {
+    return fetch("https://7cglrrttvvchnc6fbns7aa6apa.appsync-api.ap-northeast-1.amazonaws.com/graphql", {
       method: "POST",
       headers: {
         "Authorization": token,
@@ -32,9 +32,9 @@ function getWsClient(): SubscriptionClient {
     const token = auth.token;
     if (token) {
       const client = new SubscriptionClient(
-        "wss://jjnbeyhnmbfcjhofuptsskbseq.appsync-realtime-api.ap-northeast-1.amazonaws.com/graphql",
+        "wss://7cglrrttvvchnc6fbns7aa6apa.appsync-realtime-api.ap-northeast-1.amazonaws.com/graphql",
         token,
-        "jjnbeyhnmbfcjhofuptsskbseq.appsync-api.ap-northeast-1.amazonaws.com",
+        "7cglrrttvvchnc6fbns7aa6apa.appsync-api.ap-northeast-1.amazonaws.com",
       );
       _wsClient = client;
       return client;
