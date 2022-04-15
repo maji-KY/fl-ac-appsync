@@ -1,0 +1,88 @@
+{
+  "extends": ["eslint:recommended", "next/core-web-vitals", "prettier"],
+  "env": {},
+  "plugins": [],
+  "ignorePatterns": [],
+  "rules": {
+    // Best Practices
+    "use-isnan": [2], // NaNでの比較を許可しない
+    "block-scoped-var": [2], // 宣言しているコンテキストの外で使用されている変数を許可しない
+    "complexity": [1, 20], // 循環的複雑度と、その閾値
+    "consistent-return": [2], // 何も値を返さない(undefined)ステートメントと値を返すステートメントの混在を許可しない
+    "curly": [1, "all"], // 中括弧の省略を許可しない
+    "default-case": [2], //Swith文でのdefaultの省略を許可しない
+    "eqeqeq": [2], // 等価演算子を許可しない
+    "guard-for-in": [2], // プロトタイプチェーンで継承したプロパティをフィルタリングしないfor-inを許可しない
+    "no-alert": [2], // alertの使用を許可しない
+    "no-caller": [2], // arguments.callee、arguments.callerの使用を許可しない
+    "no-div-regex": [2], // 除算のように見える正規表現を許可しない
+    "no-else-return": [0], // 不要なelse節でのreturnを許可しない
+    "no-empty-label": [0], //繰り返し処理やswitch文以外に対してのラベルの使用を許可しない
+    "no-eq-null": [2], // 等価演算子でのnull比較を許可しない
+    "no-eval": [2], // evalの使用を許可しない
+    "no-extend-native": [2], // ネイティブオブジェクトの拡張を許可しない
+    "no-extra-bind": [2], // 不要なbindの使用を許可しない
+    "no-fallthrough": [0], // フォールスルーの不足を許可しない
+    "no-floating-decimal": [2], // 浮動小数点のドットの前後の省略を許可しない
+    "no-implied-eval": [2], // 暗黙のevalを許可しない
+    "no-iterator": [2], // __iterator__の使用を許可しない
+    "no-labels": [2], // ラベルをつけたステートメントを許可しない
+    "no-lone-blocks": [2], // 不要なブロックを許可しない
+    "no-loop-func": [2], // ループの中で関数をつくることを許可しない
+    "no-multi-spaces": [2], // 複数のスペースを許可しない
+    "no-multi-str": [0], // バックスラッシュつなぎの複数行の文字列を許可しない
+    "no-native-reassign": [2], // ネイティブオブジェクトへの再代入を許可しない
+    "no-new-func": [2], // Functionコンストラクタの使用を許可しない
+    "no-new-wrappers": [2], // プリミティブ型のラッパーオブジェクトの使用を許可しない
+    "no-new": [0], // 変数に代入せずnew演算子を使用することを許可しない
+    "no-octal-escape": [2], // 8進数のエスケープシーケンスの使用を許可しない
+    "no-octal": [2], // 8進数リテラルの使用を許可しない
+    "no-param-reassign": [2], // 関数の引数に対する再代入を許可しない
+    "no-process-env": [0], // Node.jsのprocess.envの使用を許可しない
+    "no-proto": [2], // __proto__の使用を許可しない
+    "no-redeclare": [2], // 同じ変数を繰り返し宣言することを許可しない
+    "no-return-assign": [2], // returnステートメントでの代入を許可しない
+    "no-script-url": [0], // javascript:URLの使用を許可しない
+    "no-self-compare": [2], // 自分自身との比較を許可しない
+    "no-sequences": [2], // カンマ演算子の使用を許可しない(for文初期化や括弧で囲われたシーケンスなどは例外)
+    "no-throw-literal": [2], // リテラルを投げることを許可しない
+    "no-unused-expressions": [0], // 使用することのない式を許可しない
+    "no-void": [0], // voidの使用を許可しない
+    "no-warning-comments": [1], // TODOやFIXMEのような開発中ととれるコメントを許可しない
+    "no-with": [2], // withの使用を許可しない
+    "radix": [2], // parseIntの引数の基数を省略することを許可しない
+    "vars-on-top": [0], // 関数スコープの最上部で変数宣言をまとめないことを許可しない
+    "wrap-iife": [2, "inside"], // 即時関数を括弧で囲わないことを許可しない
+    "yoda": [2], // 条件の値が左辺にくる条件式(ヨーダ)を許可しない
+    "require-atomic-updates": [2], // 非同期での変数の再代入を許可しない
+
+    // Variables
+    "no-unused-vars": [0], // 使用することのない変数を許可しない
+    "no-catch-shadow": [2], // catch句の引数を上位スコープで変数宣言することを許可しない
+    "no-delete-var": [2], // 変数に対するdeleteの使用を許可しない
+    "no-label-var": [2], // 変数名をラベルに使用することを許可しない
+    "no-shadow-restricted-names": [2], // グローバルオブジェクトのプロパティに対するシャドーイングを許可しない
+    "no-shadow": [2], // シャドーイングを許可しない
+    "no-undef-init": [2], // undefinedによる初期化を許可しない
+
+    // ES6
+    "constructor-super": [2], // 無効なsuper()の呼び出しを許可しない
+    "no-this-before-super": [2], // super()を呼び出す前のthis/superを許可しない
+    "no-var": [2], // varの使用を許可しない
+    "object-shorthand": [2, "always"], // objectリテラルのショートハンドを強制する
+    "prefer-const": [2], // letで宣言されている変数で、変更されることのないものに対してconstへの変更を強制する
+    "no-async-promise-executor": [2], // Promise内でのasync関数を許可しない
+    "prefer-object-spread": [2], // spread演算子を強制する
+
+    // Legacy
+    "no-plusplus": [1], // ++/--の単項演算子の使用を許可しない
+
+    // React
+    "react/no-set-state": [2],
+    "react/jsx-pascal-case": [2],
+    "react/jsx-tag-spacing": [2],
+
+    // nextルールの除外
+    "@next/next/no-title-in-document-head": "off"
+  }
+}

@@ -1,0 +1,74 @@
+# オークション
+type Auction @aws_oidc {
+	# オークションID
+	id: ID!
+	# 出品タイトル
+	title: String!
+	# 詳細
+	description: String!
+	# 終了日時
+	closeAt: String!
+	# 出品者ID
+	ownerId: String!
+	# 出品者名
+	ownerName: String!
+	# 入札履歴
+	biddingHistory: [Bidding!]!
+	# 開始日時
+	createdAt: String!
+}
+
+# 入札
+type Bidding @aws_oidc {
+	# 入札ID
+	id: ID!
+	# 入札額
+	amount: Int!
+	# 入札者ID
+	bidderId: String!
+	# 入札者名
+	bidderName: String!
+	# 入札日時
+	createdAt: String!
+}
+
+# 新規出品引数
+input CreateAuctionInput {
+	# 出品タイトル
+	title: String!
+	# 詳細
+	description: String!
+}
+
+# 入札引数
+input BidInput {
+	# オークションID
+	auctionId: ID!
+	# 入札額
+	amount: Int!
+}
+
+type Mutation {
+	# 新たに出品します
+	createAuction(input: CreateAuctionInput!): Auction! @aws_oidc
+	# 入札します
+	bid(input: BidInput!): Auction! @aws_oidc
+}
+
+type Query {
+	# オークション一覧を取得します
+	auctions: [Auction!]! @aws_oidc
+	# オークション詳細を取得します
+	auction(id: ID!): Auction! @aws_oidc
+}
+
+type Subscription {
+	# オークション詳細を購読します
+	onUpdateAuction(id: ID!): Auction! @aws_subscribe(mutations: ["bid"]) @aws_oidc
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}
