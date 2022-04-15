@@ -3,3 +3,4 @@
 /artifact
 node_modules
 .next
+.terraform
