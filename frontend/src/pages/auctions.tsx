@@ -13,9 +13,6 @@ const auctionsQuery = graphql`
       title
       description
       closeAt
-      ownerId
-      ownerName
-      createdAt
     }
   }
 `;

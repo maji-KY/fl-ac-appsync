@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7eb68b4d32cc07447d760fee285ed418>>
+ * @generated SignedSource<<d16dd9f62cf3c9143b33f02289b313ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,9 +16,6 @@ export type auctionsQuery$data = {
     readonly title: string;
     readonly description: string;
     readonly closeAt: string;
-    readonly ownerId: string;
-    readonly ownerName: string;
-    readonly createdAt: string;
   }>;
 };
 export type auctionsQuery = {
@@ -63,27 +60,6 @@ var v0 = [
         "kind": "ScalarField",
         "name": "closeAt",
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "ownerId",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "ownerName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "createdAt",
-        "storageKey": null
       }
     ],
     "storageKey": null
@@ -107,16 +83,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "00c4b72e28854003f84c79b4b1a2c8e1",
+    "cacheID": "824261ee421c40f0c9c3b03e60b77a11",
     "id": null,
     "metadata": {},
     "name": "auctionsQuery",
     "operationKind": "query",
-    "text": "query auctionsQuery {\n  auctions {\n    id\n    title\n    description\n    closeAt\n    ownerId\n    ownerName\n    createdAt\n  }\n}\n"
+    "text": "query auctionsQuery {\n  auctions {\n    id\n    title\n    description\n    closeAt\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "138324c8495806dff4426b9b9319a520";
+(node as any).hash = "3bce706cba646e9ead121e303e7c703a";
 
 export default node;
