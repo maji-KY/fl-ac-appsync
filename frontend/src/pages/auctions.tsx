@@ -64,17 +64,24 @@ const StyledDiv = styled.div`
       transform: rotate(360deg);
     }
   }
+  .create {
+    display: inline-block;
+    margin-top: 30px;
+  }
 `;
 
 const Auctions: NextPage = () => {
   const [preload, load] = useQueryLoader<AQ>(auctionsQuery);
   React.useEffect(() => {
-    load({});
+    load({}, { fetchPolicy: "store-and-network" });
   }, [load]);
 
   return (
     <StyledDiv>
       <div className="logo">フリオク!</div>
+      <Link href="/auction/create">
+        <a className="create">新規に出品する！！</a>
+      </Link>
       <h1>オークション一覧</h1>
       <React.Suspense fallback={<div className="loading">ろ〜でぃんぐ☆</div>}>
         {preload && <AuctionList preload={preload} />}
