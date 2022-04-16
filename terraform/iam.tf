@@ -108,7 +108,7 @@ resource "aws_iam_role_policy" "data_api_policy" {
         "Action" : [
           "secretsmanager:GetSecretValue"
         ],
-        "Resource" : "${aws_secretsmanager_secret.rds_cred.arn}/*"
+        "Resource" : aws_secretsmanager_secret.rds_cred.arn
       },
       {
         "Sid" : "RDSDataServiceAccess",

@@ -9,7 +9,9 @@ resource "aws_lambda_function" "auctions" {
 
   environment {
     variables = {
-      RUST_LOG = "info"
+      RUST_LOG     = "info"
+      RESOURCE_ARN = aws_rds_cluster.db.arn
+      SECRET_ARN   = aws_secretsmanager_secret.rds_cred.arn
     }
   }
 
@@ -38,7 +40,9 @@ resource "aws_lambda_function" "auction" {
 
   environment {
     variables = {
-      RUST_LOG = "info"
+      RUST_LOG     = "info"
+      RESOURCE_ARN = aws_rds_cluster.db.arn
+      SECRET_ARN   = aws_secretsmanager_secret.rds_cred.arn
     }
   }
 
@@ -67,7 +71,9 @@ resource "aws_lambda_function" "create_auction" {
 
   environment {
     variables = {
-      RUST_LOG = "info"
+      RUST_LOG     = "info"
+      RESOURCE_ARN = aws_rds_cluster.db.arn
+      SECRET_ARN   = aws_secretsmanager_secret.rds_cred.arn
     }
   }
 
@@ -96,7 +102,9 @@ resource "aws_lambda_function" "bid" {
 
   environment {
     variables = {
-      RUST_LOG = "info"
+      RUST_LOG     = "info"
+      RESOURCE_ARN = aws_rds_cluster.db.arn
+      SECRET_ARN   = aws_secretsmanager_secret.rds_cred.arn
     }
   }
 
