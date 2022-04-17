@@ -1,19 +1,13 @@
 resource "aws_vpc" "main" {
   cidr_block           = "10.1.0.0/16"
   enable_dns_hostnames = true
-  tags = {
-    Name : "flac"
-  }
 }
 
 resource "aws_subnet" "private" {
-  count             = 3
+  count             = 2
   availability_zone = var.availability_zones[count.index]
   vpc_id            = aws_vpc.main.id
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
-  tags = {
-    Name : "flac"
-  }
 }
 
 resource "aws_db_subnet_group" "app_rds" {
