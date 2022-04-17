@@ -8,6 +8,7 @@ import { PreloadedQuery } from "react-relay/relay-hooks/EntryPointTypes";
 import { AuctionIdQuery } from "./__generated__/AuctionIdQuery.graphql";
 import { AuctionIdSubscription } from "./__generated__/AuctionIdSubscription.graphql";
 import { AuctionIdBidMutation } from "./__generated__/AuctionIdBidMutation.graphql";
+import Link from "next/link";
 
 const auctionQuery = graphql`
   query AuctionIdQuery($id: ID!) {
@@ -144,6 +145,10 @@ const StyledDiv = styled.div`
     font-weight: bold;
     margin: -30px auto;
   }
+  .back {
+    display: inline-block;
+    margin-top: 30px;
+  }
   .loading {
     animation: rotate 1s linear infinite;
   }
@@ -176,6 +181,9 @@ const Auction: NextPage = () => {
   return (
     <StyledDiv>
       <div className="logo">フリオク!</div>
+      <Link href="/auctions">
+        <a className="back">一覧に戻る</a>
+      </Link>
       <h1>オークション詳細</h1>
       <React.Suspense fallback={<div className="loading">ろ〜でぃんぐ☆</div>}>
         {preload && <AuctionDetail preload={preload} />}
