@@ -8,6 +8,42 @@ use chrono::TimeZone;
 use std::env;
 use std::ops::Add;
 use ulid::Ulid;
+use rdsdata_mapper::typeclass::MapTo;
+use rdsdata_mapper::RdsdataMapper;
+
+#[derive(Debug, RdsdataMapper)]
+#[rdsdata_mapper(table_name = "bidding")]
+pub struct BiddingRecord {
+    pub id: String,
+    pub auction_id: String,
+    pub amount: i64,
+    pub bidder_id: String,
+    pub bidder_name: String,
+    pub created_at: String,
+}
+
+#[derive(Debug, RdsdataMapper)]
+#[rdsdata_mapper(table_name = "auction")]
+pub struct AuctionRecord {
+    pub id: String,
+    pub title: String,
+    pub description: String,
+    pub close_at: String,
+    pub owner_id: String,
+    pub owner_name: String,
+    pub created_at: String,
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::database::BiddingRecord;
+    use crate::database::AuctionRecord;
+    #[test]
+    fn it_works() {
+        assert_eq!(BiddingRecord::select("where id = :id"), "select id,auction_id,amount,bidder_id,bidder_name,created_at from bidding where id = :id");
+        assert_eq!(AuctionRecord::select("where id = :id"), "select id,title,description,close_at,owner_id,owner_name,created_at from auction where id = :id");
+    }
+}
 
 #[derive(thiserror::Error, Debug)]
 pub enum DBError {
@@ -30,13 +66,6 @@ pub fn get_statement(client: &Client) -> anyhow::Result<ExecuteStatement> {
     Ok(statement)
 }
 
-fn as_string(field: &Field) -> anyhow::Result<String> {
-    Ok(field
-        .as_string_value()
-        .map_err(|_| DBError::ConvertFailed(format!("{:?}", field)))?
-        .to_string())
-}
-
 fn format_datetime(input: String) -> anyhow::Result<String> {
     Ok(chrono::Utc
         .datetime_from_str(input.as_str(), "%Y-%m-%d %H:%M:%S")?
@@ -47,39 +76,38 @@ fn extract_auction(
     row: &Vec<Field>,
     bidding_history: Vec<model::Bidding>,
 ) -> anyhow::Result<model::Auction> {
+    let record: AuctionRecord = row.map_to_model()?;
     Ok(model::Auction {
-        id: as_string(&row[0])?,
-        title: as_string(&row[1])?,
-        description: as_string(&row[2])?,
-        close_at: format_datetime(as_string(&row[3])?)?,
-        owner_id: as_string(&row[4])?,
-        owner_name: as_string(&row[5])?,
+        id: record.id,
+        title: record.title,
+        description: record.description,
+        close_at: format_datetime(record.close_at)?,
+        owner_id: record.owner_id,
+        owner_name: record.owner_name,
         bidding_history,
-        created_at: format_datetime(as_string(&row[6])?)?,
+        created_at: format_datetime(record.created_at)?,
     })
 }
 
 fn extract_bidding(rows: Vec<Vec<Field>>) -> anyhow::Result<Vec<model::Bidding>> {
-    let result: Result<Vec<model::Bidding>, anyhow::Error> = rows
+    rows
         .into_iter()
         .map(|row| {
+            let record: BiddingRecord = row.map_to_model()?;
             Ok(model::Bidding {
-                id: as_string(&row[0])?,
-                amount: *row[1]
-                    .as_long_value()
-                    .map_err(|_| DBError::ConvertFailed(format!("{:?}", row[1])))?,
-                bidder_id: as_string(&row[2])?,
-                bidder_name: as_string(&row[3])?,
-                created_at: format_datetime(as_string(&row[4])?)?,
+                id: record.id,
+                amount: record.amount,
+                bidder_id: record.bidder_id,
+                bidder_name: record.bidder_name,
+                created_at: format_datetime(record.created_at)?,
             })
         })
-        .collect();
-    Ok(result?)
+        .collect()
 }
 
 pub async fn select_auctions(client: &Client) -> anyhow::Result<Vec<model::Auction>> {
     let auction_results = get_statement(client)?
-        .sql("select id,title,description,close_at,owner_id,owner_name,created_at from auction order by created_at desc")
+        .sql(AuctionRecord::select("order by id desc"))
         .send().await?;
     let auction_rows = auction_results.records.ok_or(DBError::NotFound)?;
     auction_rows
@@ -90,7 +118,7 @@ pub async fn select_auctions(client: &Client) -> anyhow::Result<Vec<model::Aucti
 
 pub async fn select_auction_by_id(client: &Client, id: String) -> anyhow::Result<model::Auction> {
     let auction_results = get_statement(client)?
-        .sql("select id,title,description,close_at,owner_id,owner_name,created_at from auction where id = :id")
+        .sql(AuctionRecord::select("where id = :id"))
         .parameters(Builder::default().name("id").value(Field::StringValue(id.to_string())).build())
         .send().await?;
     let auction_rows = auction_results.records.ok_or(DBError::NotFound)?;
@@ -98,7 +126,7 @@ pub async fn select_auction_by_id(client: &Client, id: String) -> anyhow::Result
         return Err(anyhow::Error::from(DBError::NotFound));
     }
     let bidding_results = get_statement(client)?
-        .sql("select id,amount,bidder_id,bidder_name,created_at from bidding where auction_id = :id order by created_at desc")
+        .sql(BiddingRecord::select("where auction_id = :id order by id desc"))
         .parameters(Builder::default().name("id").value(Field::StringValue(id)).build())
         .send().await?;
     let bidding_rows = bidding_results.records.ok_or(DBError::NotFound)?;

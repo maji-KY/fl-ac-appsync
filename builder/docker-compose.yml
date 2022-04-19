@@ -6,4 +6,6 @@ services:
       dockerfile: builder/Dockerfile
     volumes:
       - ../src:/app/src
+      - ../rdsdata_mapper_derive/src:/app/rdsdata_mapper_derive/src
+      - ../rdsdata_mapper/src:/app/rdsdata_mapper/src
       - ../artifact:/artifact

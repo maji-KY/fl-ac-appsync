@@ -1,0 +1,10 @@
+[package]
+name = "rdsdata_mapper"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+aws-sdk-rdsdata = "0.10.1"
+thiserror = "1.0"
+rdsdata_mapper_derive = { path = "../rdsdata_mapper_derive" }

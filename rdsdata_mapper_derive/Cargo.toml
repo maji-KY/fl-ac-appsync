@@ -1,0 +1,23 @@
+[package]
+name = "rdsdata_mapper_derive"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+proc-macro = true
+
+[[test]]
+name = "tests"
+path = "tests/suite.rs"
+
+[dev-dependencies]
+trybuild = { version = "1.0.49", features = ["diff"] }
+aws-sdk-rdsdata = "0.10.1"
+rdsdata_mapper = { path = "../rdsdata_mapper" }
+
+
+[dependencies]
+syn = "1.0.91"
+proc-macro2 = "1.0.37"
+quote = "1.0.18"
