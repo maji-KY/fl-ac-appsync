@@ -10,10 +10,8 @@ use syn::{
 pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
-    // Used in the quasi-quotation below as `#name`.
     let name = input.ident;
 
-    // Add a bound `T: HeapSize` to every type parameter T.
     let generics = add_trait_bounds(input.generics);
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
 
@@ -29,8 +27,9 @@ pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
             }
         }
 
-        impl #impl_generics rdsdata_mapper::typeclass::MapTo<#name #ty_generics> #where_clause for Vec<aws_sdk_rdsdata::model::Field> {
-            fn map_to_model(&self) -> Result<#name, rdsdata_mapper::error::MappingError> {
+        impl #impl_generics TryFrom<Vec<aws_sdk_rdsdata::model::Field>> for #name #ty_generics #where_clause {
+            type Error = rdsdata_mapper::error::MappingError;
+            fn try_from(value: Vec<aws_sdk_rdsdata::model::Field>) -> Result<Self, Self::Error> {
                 Ok(#name {
                     #generated_mapping
                 })
@@ -53,16 +52,16 @@ fn add_trait_bounds(mut generics: Generics) -> Generics {
 fn get_convert_exp(index: usize, ty: &Type) -> TokenStream {
     match ty {
         syn::Type::Path(x) if x.path.is_ident("String") => {
-            quote! { rdsdata_mapper::convert::to_string(&self[#index])? }
+            quote! { rdsdata_mapper::convert::to_string(&value[#index])? }
         }
         syn::Type::Path(x) if x.path.is_ident("i64") => {
-            quote! { rdsdata_mapper::convert::as_i64(&self[#index])? }
+            quote! { rdsdata_mapper::convert::as_i64(&value[#index])? }
         }
         syn::Type::Path(x) if x.path.is_ident("f64") => {
-            quote! { rdsdata_mapper::convert::as_f64(&self[#index])? }
+            quote! { rdsdata_mapper::convert::as_f64(&value[#index])? }
         }
         syn::Type::Path(x) if x.path.is_ident("bool") => {
-            quote! { rdsdata_mapper::convert::as_boolean(&self[#index])? }
+            quote! { rdsdata_mapper::convert::as_boolean(&value[#index])? }
         }
         syn::Type::Path(x) if x.path.segments[0].ident.to_string() == "Option" => {
             let param_arg = match x.path.segments[0].arguments {
@@ -75,7 +74,7 @@ fn get_convert_exp(index: usize, ty: &Type) -> TokenStream {
             };
             let conv_exp = get_convert_exp(index, patam_type);
             quote! {
-                if self[#index].is_is_null() {
+                if value[#index].is_is_null() {
                     None
                 } else {
                     Some(#conv_exp)

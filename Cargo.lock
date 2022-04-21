@@ -1059,6 +1059,7 @@ name = "rdsdata_mapper"
 version = "0.1.0"
 dependencies = [
  "aws-sdk-rdsdata",
+ "chrono",
  "rdsdata_mapper_derive",
  "thiserror",
 ]
